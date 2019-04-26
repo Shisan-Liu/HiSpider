@@ -41,7 +41,6 @@ class Save(object):
             # 调用检测文件夹函数并判断是否成功,失败关闭程序
             if(self.CheckFolder(foldername)==False):
                 self.loclog.write('文件夹检测或创建失败')
-                sys.exit(0)
             else:
                 self.ischeckfolder = True
                 self.loclog.write(self.folderpath +'文件夹已创建'+'开始写入文件')
