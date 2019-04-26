@@ -26,7 +26,6 @@ headers = {
 #    "wd":"python",
 #}
 
-
 # 获取HTML
 myrq = Mr.MyRequest()
 html = myrq.gethtml(url)

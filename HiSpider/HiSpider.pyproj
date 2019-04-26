@@ -39,7 +39,6 @@
     <Folder Include="Verify\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Static\README.md" />
     <Content Include="Static\__pycache__\analyze.cpython-36.pyc" />
     <Content Include="Static\__pycache__\analyze.cpython-37.pyc" />
     <Content Include="Static\__pycache__\log.cpython-36.pyc" />
