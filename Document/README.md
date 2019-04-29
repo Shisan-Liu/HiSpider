@@ -1,7 +1,7 @@
 ﻿  # <center>HiSpider</center>
-#### <center>多功能智能爬虫系统</center>
+#### <center>全地形爬虫系统</center>
 
-## <a href="./WebStruction.md">设计思路文档</a>
+## <a href="https://github.com/ZhaoTongFeng/HiSpider/blob/master/Document/WebStruction.md">设计思路文档</a>
 
 ## **主要功能：**
 - 提取任意文章页标题、作者、时间、点赞、评论和正文等
@@ -14,12 +14,11 @@
 
 ## **项目流程**
 - ### 基本框架和静态网页抓取
-  1. 生成log日志
   2. 获取html代码
   3. 分析html代码
   4. 过滤html代码
   5. 人工协助生成数据结构
-  6. 分析数据分析
+  6. 数据分析
   7. 创建文件夹并保存文件
   7. 发送报告
   8. UI界面
