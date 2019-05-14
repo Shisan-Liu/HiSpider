@@ -13,6 +13,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "NewPython", "..\..\NewPytho
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "QTTest", "..\..\PyQT\QTTest\QTTest.pyproj", "{8178B3CC-050B-4D80-A688-D0D4F14A10F3}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "数据科学", "..\..\数据科学\数据科学.pyproj", "{1A4FE0B4-94A2-48C0-B47A-904CEDF47B28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,8 @@ Global
 		{6E6BE626-1B31-44AF-B357-7E89A55B9098}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8178B3CC-050B-4D80-A688-D0D4F14A10F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8178B3CC-050B-4D80-A688-D0D4F14A10F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A4FE0B4-94A2-48C0-B47A-904CEDF47B28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A4FE0B4-94A2-48C0-B47A-904CEDF47B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

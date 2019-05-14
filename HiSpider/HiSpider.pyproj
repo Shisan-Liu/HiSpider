@@ -21,21 +21,24 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Function.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="HiSpider.py" />
     <Compile Include="Static\analyze.py" />
     <Compile Include="Static\classsify.py" />
     <Compile Include="Static\log.py" />
-    <Compile Include="Static\Main.py" />
+    <Compile Include="Static\main.py" />
+    <Compile Include="Static\module.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Static\myRequests.py" />
-    <Compile Include="Static\save.py" />
+    <Compile Include="Static\filecontroller.py" />
     <Compile Include="Static\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Analyze\" />
     <Folder Include="content\" />
-    <Folder Include="content\baidunews\" />
-    <Folder Include="content\baidunews\2019-5-12\" />
-    <Folder Include="content\baidunews\2019-5-12\0\" />
     <Folder Include="Dynamic\" />
     <Folder Include="log\" />
     <Folder Include="Config\" />
@@ -44,12 +47,6 @@
     <Folder Include="Verify\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\Save.conf">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="content\baidunews\2019-5-12\0\2019-5-12.txt" />
-    <Content Include="log\2019-5-12.txt" />
-    <Content Include="log\2019-5-13.txt" />
     <Content Include="Static\__pycache__\analyze.cpython-36.pyc" />
     <Content Include="Static\__pycache__\analyze.cpython-37.pyc" />
     <Content Include="Static\__pycache__\log.cpython-36.pyc" />
