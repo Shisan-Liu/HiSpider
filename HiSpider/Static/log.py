@@ -8,35 +8,46 @@ import time,os
 # 输出：判断并生成一个log文件，写入时间戳+信息/错误信息
 # =============================================================================
 
+
+# 规范LOG信息
+# 每一个事件，执行前，执行中，执行后都要记录LOG事件
+# 可以定义一个结构体在每个事件中进行设定，在记录时调用
+# 后面还以在配置文件中进行修改
+class loginfo(object):
+    def __init__(self,defaultStartMessage, defaultEndMessage):
+        self.Start=defaultStartMessage
+        self.End=defaultEndMessage
+
 #自动在目录下创建log文件夹，并提供write功能
 class Log(object):
 
     def __init__(self):
-        self.LoadLog()
-        
-    def LoadLog(self):
+        self.logHome = './log/'
         #检测文件夹是否创建
-        if(os.path.exists('./log')==False):
-            os.mkdir('./log')
-
-
+        if(os.path.exists(self.logHome)==False):
+            os.mkdir(self.logHome)
+        
+        self.startlog = '加载Log模块。。。OK'
+        self.write(self.startlog)
+            
     def write(self,logstr):
-        try:
-            curtime =  time.localtime(time.time())
+
+        # 文件路径
+        curtime =  time.localtime(time.time())
+        filename = str(curtime.tm_year)+'-'+ str(curtime.tm_mon)+'-'+ str(curtime.tm_mday)+'.txt'
+        logfilename = self.logHome+filename
             
-            FolderRoot = '.\\log\\'        
-            filename = str(curtime.tm_year)+'-'+ str(curtime.tm_mon)+'-'+ str(curtime.tm_mday)+'.txt'
-            logfilename = FolderRoot+filename
+        # 内容
+        timehead = '['+str(curtime.tm_hour)+':'+str(curtime.tm_min)+':'+str(curtime.tm_sec)+']:'
+        content = str(timehead) + str(logstr)
             
-            timehead = '['+str(curtime.tm_hour)+':'+str(curtime.tm_min)+':'+str(curtime.tm_sec)+']:'
-            content = timehead + logstr
+        # 写入文件
+        with open(logfilename,'a',encoding='utf-8') as f:
+            f.write(content)
+            f.write('\n')  
+
             
-            with open(logfilename,'a',encoding='utf-8') as f:
-                f.write(content)
-                f.write('\n')  
-        except:
-            print('写入日志失败')
-            
-            
-#testlog = log()
-#testlog.write('这是一条日志测试信息')
+         
+if __name__=='__main__':
+    testlog = Log()
+    testlog.write('这是一条日志测试信息')

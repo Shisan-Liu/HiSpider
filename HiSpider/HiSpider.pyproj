@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>78c446f7-6187-4714-a74c-68a78b5d9914</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Static\Main.py</StartupFile>
+    <StartupFile>HiSpider.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Analyze\analyze.py" />
     <Compile Include="HiSpider.py" />
     <Compile Include="Static\analyze.py" />
     <Compile Include="Static\classsify.py" />
@@ -33,12 +32,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Analyze\" />
+    <Folder Include="content\" />
+    <Folder Include="content\baidunews\" />
+    <Folder Include="content\baidunews\2019-5-12\" />
+    <Folder Include="content\baidunews\2019-5-12\0\" />
     <Folder Include="Dynamic\" />
+    <Folder Include="log\" />
+    <Folder Include="Config\" />
     <Folder Include="Static\" />
     <Folder Include="Static\__pycache__\" />
     <Folder Include="Verify\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\Save.conf">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="content\baidunews\2019-5-12\0\2019-5-12.txt" />
+    <Content Include="log\2019-5-12.txt" />
+    <Content Include="log\2019-5-13.txt" />
     <Content Include="Static\__pycache__\analyze.cpython-36.pyc" />
     <Content Include="Static\__pycache__\analyze.cpython-37.pyc" />
     <Content Include="Static\__pycache__\log.cpython-36.pyc" />

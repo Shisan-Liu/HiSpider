@@ -5,6 +5,14 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "HiSpider", "HiSpider\HiSpider.pyproj", "{78C446F7-6187-4714-A74C-68A78B5D9914}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "GUI", "..\..\GUI\GUI.pyproj", "{B440C45B-09C5-4840-9EE8-A15A1235691F}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SearchEngine", "..\实例\0_self\SearchEngine\SearchEngine.pyproj", "{0D6AF355-248D-429A-B435-EB64112B0307}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "NewPython", "..\..\NewPython\NewPython.pyproj", "{6E6BE626-1B31-44AF-B357-7E89A55B9098}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "QTTest", "..\..\PyQT\QTTest\QTTest.pyproj", "{8178B3CC-050B-4D80-A688-D0D4F14A10F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +21,14 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{78C446F7-6187-4714-A74C-68A78B5D9914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{78C446F7-6187-4714-A74C-68A78B5D9914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B440C45B-09C5-4840-9EE8-A15A1235691F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B440C45B-09C5-4840-9EE8-A15A1235691F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6AF355-248D-429A-B435-EB64112B0307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6AF355-248D-429A-B435-EB64112B0307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6BE626-1B31-44AF-B357-7E89A55B9098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6BE626-1B31-44AF-B357-7E89A55B9098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8178B3CC-050B-4D80-A688-D0D4F14A10F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8178B3CC-050B-4D80-A688-D0D4F14A10F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
