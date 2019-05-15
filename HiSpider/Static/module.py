@@ -1,7 +1,8 @@
 # =============================================================================
 # =============================================================================
 # 这个模型便是一次抓取模型
-# 保存各种信息，抓取数据后生成，UI显示 数据时调用
+# 保存各种信息变量
+# 抓取数据后生成，UI显示 数据时读取保存方法
 # =============================================================================
 # =============================================================================
 # 模型结构
@@ -19,29 +20,47 @@
 # ---File(index_ChildURL_Time.txt)
 # =============================================================================
 # =============================================================================
+
+
+
+from Static.filecontroller import FileController as FC
+from Static.log import Log
 class Model(object):
-    def __init__(self):
+    def __init__(self,modelname):
+        self.classname = "Model_"+modelname
+        self.startLog =  '=====================读取'+modelname+'.conf。。。====================='          # Log信息
+        self.endLog = '=====================加载'+modelname+'成功====================='
+
         self.html = ''
-        self.diclist
-        #...
+        self.diclist = []                               #最终字典列表
+
+        self.contentHome = './content/'                 # 文件保存根目录  
         self.modelHome = ''
         self.tempHome = ''
         self.htmlHome = ''
 
-
-    def CheckAndMakeDir(self,path):
-        className = "MakeDir_"
-        # 检查并创建文件夹
+        # 加载Log模块
+        self.loclog = Log()
+        # 开始初始化
+        self.loclog.write(self.classname+self.startLog)
+        # 加载文件控制器模块
+        self.fileController = FC()
+        # 加载配置文件测试
         try:
-            if(os.path.exists(path)==False):
-                os.mkdir(path)
+            confdic = self.Conf_read(self.configFilePath)
+            for k in confdic.keys():
+                if(k=='endLog'):
+                    self.endLog = confdic[k]
+            self.loclog.write("配置文件[%s]创建[成功]"%(self.configFilePath))
         except Exception as result:
-            self.loclog.write("%s%s创建文件夹[%s][失败]:"%(self.classname,className,path,result))
+            self.loclog.write("配置文件[%s]创建[失败]:%s"%(self.configFilePath,result))
+        # 结束初始化
+        self.loclog.write(self.classname+self.endLog)
 
-    def CheckLocConfig(self,contentHome,modelname):
-        path = contentHome+modelname+'/model.conf'
-        if(os.path.exists(path)==False):return False
-        else:return True
+
+    
+
+
 
 
     def SaveConf(self,contentHome,modelname):
@@ -142,4 +161,6 @@ class Model(object):
         if(path==False):self.loclog.write('文件夹名构造异常')
         else:self.SaveFile(path,diclist,format)
 
-        #self.readDicList(path)
+if __name__=='__main__':
+    TestLog = Log()
+    TestSave = FileController(TestLog)

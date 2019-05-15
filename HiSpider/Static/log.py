@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 import time,os
 # =============================================================================
-# 按照日期在log文件夹下创建log文件记录操作
-# =============================================================================
-# =============================================================================
-# 输入：信息
-# 输出：判断并生成一个log文件，写入时间戳+信息/错误信息
+# 日志生成（其实可以合并到文件控制器中）
 # =============================================================================
 
 
-# 规范LOG信息
+# 规范LOG信息（未完成）
 # 每一个事件，执行前，执行中，执行后都要记录LOG事件
 # 可以定义一个结构体在每个事件中进行设定，在记录时调用
 # 后面还以在配置文件中进行修改
@@ -18,7 +14,7 @@ class loginfo(object):
         self.Start=defaultStartMessage
         self.End=defaultEndMessage
 
-#自动在目录下创建log文件夹，并提供write功能
+
 class Log(object):
 
     def __init__(self):
@@ -31,7 +27,8 @@ class Log(object):
         self.write(self.startlog)
             
     def write(self,logstr):
-
+        # 输入：信息
+        # 输出：判断并生成一个log文件，写入时间戳+信息
         # 文件路径
         curtime =  time.localtime(time.time())
         filename = str(curtime.tm_year)+'-'+ str(curtime.tm_mon)+'-'+ str(curtime.tm_mday)+'.txt'
