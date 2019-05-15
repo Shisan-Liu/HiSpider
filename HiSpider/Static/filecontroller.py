@@ -33,74 +33,110 @@
 # =============================================================================
 # =============================================================================
 import csv,os,time,sys,json
-from Static.log import Log
-
 
 class FileController(object):
     # 初始化
     def __init__(self):
-        self.configFilePath = './Config/FileController.conf'      # Save配置文件path
         self.confdic = {
+            "confFilePath":'./Config/FileController.conf',
+            "logHome":'./log',
             "className":"FileController",
-            "endLog":'=====================加载FileController模块。。。OK=====================',
-            "startLog":'=====================读取FileController.conf。。。====================='
+            "logstart":'Log模块。。。OK',
+            "endLog":'=====================FileController模块。。。OK=====================',
+            "startLog":'=====================加载FileController.conf。。。====================='
             }
-        # 加载Log模块
-        self.loclog = Log()
-        # 开始初始化
-        self.loclog.write(self.confdic["className"]+self.confdic["startLog"])
 
+        # 加载Log模块
+        self.CreateDir(self.confdic["logHome"])
         # 加载配置文件
         self.Conf_load(self.confdic)
-        # 结束初始化
-        self.loclog.write(self.confdic["className"]+self.confdic["endLog"])
 
-    def CreatDir(self,dirpath):
+
+    def File_write(self,filename,content):
+        try:
+            with open(filename,'w',encoding='utf-8') as f:
+                f.write(content)
+            self.Log_write("文件[%s]创建[成功]"%(filename))
+        except Exception as result:
+            self.Log_write("文件[%s]创建[失败]:%s"%(filename,result))
+
+    def File_read(self,filename):
+        try:
+            content=''
+            with open(filename,'r',encoding='utf-8') as f:
+                content = f.read()
+            return content
+            self.Log_write("文件[%s]读取[成功]"%(filename))
+        except Exception as result:
+            self.Log_write("文件[%s]读取[失败]:%s"%(filename,result))
+
+
+    def Log_write(self,logstr):
+        # 写入Log文件
+        curtime =  time.localtime(time.time())
+        # 文件路径
+        logfilename = self.confdic["logHome"]+'/'+str(curtime.tm_year)+'-'+ str(curtime.tm_mon)+'-'+ str(curtime.tm_mday)+'.txt'
+        # 内容 = 时间戳+信息
+        content = '[' + str(curtime.tm_hour)+ ':' + str(curtime.tm_min) + ':' + str(curtime.tm_sec) + ']:' + str(logstr)
+        with open(logfilename,'a',encoding='utf-8') as f:
+            f.write(content)
+            f.write('\n')  
+
+    def CreateDir(self,dirpath):
         # 输入：完整文件夹路径
         # 功能：遍历生成完整路径
         # 路径标准：dirpath = './t123est/automakedir/test2'
         try:
             current = './'
-            for i,path in enumerate(dirpath.split('/')[1:]):
-                current = current+path+'/'
-                if(os.path.exists(current)==False):
-                    os.mkdir(current)
-            self.loclog.write("文件夹[%s]创建[成功]"%(dirpath))
+            if(os.path.exists(dirpath)==False):
+                for i,path in enumerate(dirpath.split('/')[1:]):
+                    current = current+path+'/'
+                    if(os.path.exists(current)==False):
+                        os.mkdir(current)
+                        ismake = True
+                self.Log_write("文件夹[%s]创建[成功]"%(dirpath))
+            else:
+                self.Log_write("文件夹[%s][已创建]" %(dirpath))
         except Exception as result:
-            self.loclog.write("文件夹[%s]创建[失败]:%s"%(dirpath,result))
+            self.Log_write("文件夹[%s]创建[失败]:%s"%(dirpath,result))
 
 
     def Conf_load(self,confdic):
         # 加载配置文件，需要在全局变量中创建字典以使用
+        # 如果配置文件不存在，就创建配置文件并把默认字典写入到配置文件
+        # 如果配置文件存在，就把配置文件中信息写入字典
+        confpath = confdic["confFilePath"]
         try:
-            confdic = {}
-            confdic = self.Conf_read(self.configFilePath)
-            if(confdic!={}):
-                for k in confdic.keys():
+            if(os.path.exists(confpath)==False):
+                self.CreateDir(os.path.split(confpath)[0])  #不用担心文件夹没有创建，这里会自动检测
+                self.Conf_write(confdic)       #默认字典写入配置文件
+
+            else:
+                fileconfdic = self.Conf_read(confpath)
+                for k in fileconfdic.keys():
                     for confkey in confdic.keys():
                         if(k==confkey):
-                            confdic[k] = confdic[k]
-                self.loclog.write("配置文件[%s]创建[成功]"%(self.configFilePath))
-            else:
-                self.CreatDir(os.path.split(self.configFilePath)[0])
-                self.loclog.write("读取配置文件[%s][异常]，已创建配置文件"%(self.configFilePath))
+                            confdic[k] = fileconfdic[k]     #改变默认字典
+                self.Log_write("配置文件[%s]加载[成功]"%(confpath))
+
         except Exception as result:
-            self.loclog.write("配置文件[%s]创建[错误]:%s"%(self.configFilePath,result))
+            self.Log_write("加载配置文件[%s][错误]:%s"%(confpath,result))
 
 
 
-    def Conf_write(self,filepath,dic):
+    def Conf_write(self,confdic):
+        confpath = confdic["confFilePath"]
         # 从字典写入配置文件
         try:
-            with open(filepath,'w',encoding='utf-8') as f:        
-                for k in dic.keys():
+            with open(confpath,'w',encoding='utf-8') as f:        
+                for k in confdic.keys():
                     f.write(str(k))
                     f.write(' ')                            
-                    f.write(dic[k])
+                    f.write(confdic[k])
                     f.write('\n')
-            self.loclog.write("配置文件[%s]保存[成功]"%(filepath))
+            self.Log_write("配置文件[%s]写入[成功]"%(confpath))
         except Exception as result:
-            self.loclog.write("配置文件[%s]保存[失败]:%s"%(filepath,result))
+            self.Log_write("配置文件[%s]写入[失败]:%s"%(confpath,result))
 
 
     def Conf_read(self,filepath):
@@ -113,25 +149,19 @@ class FileController(object):
                         linecontent = line.split(' ')
                         dic[linecontent[0]] = linecontent[1][0:-1]
             
-            self.loclog.write("配置文件[%s]读取[成功]"%(filepath))
+            self.Log_write("配置文件[%s]读取[成功]"%(filepath))
         except Exception as result:
-            self.loclog.write("配置文件[%s]保存[失败]:%s"%(filepath,result))
+            self.Log_write("配置文件[%s]读取[失败]:%s"%(filepath,result))
         finally:return dic
 
 
-    def SaveDicList(self,filename,diclist):
+    def DicList_write(self,filename,diclist):
         # 特殊保存方式：两种方式保存Diclist
         className = '__SaveDicList__'
         try:
             format = os.path.splitext(filename)[1]
-            with open(filename,'w',encoding='utf-8') as file:
-                if(format=='.txt'):
-                    for dic in diclist:
-                        for k in dic.keys():
-                            f.write(str(k)+'_'+dic[k]+' ')
-                        f.write('\n')
-
-                elif(format=='.csv'):
+            with open(filename,'w',encoding='utf-8',newline="") as file:
+                if(format=='.csv'):
                     writer = csv.DictWriter(file,fieldnames=list(diclist[0].keys()))    
                     writer.writeheader()
                     for dic in diclist:
@@ -141,12 +171,12 @@ class FileController(object):
                     json_str = json.dumps(diclist)
                     file.write(json_str)
 
-            self.loclog.write("%s%s文件[%s]保存[成功]"%(self.confdic["className"],className,filename))
+            self.Log_write("%s%s文件[%s]保存[成功]"%(self.confdic["className"],className,filename))
         except Exception as result:
-            self.loclog.write("%s%s文件[%s]保存[失败]:%s"%(self.confdic["className"],className,filename,result))
+            self.Log_write("%s%s文件[%s]保存[失败]:%s"%(self.confdic["className"],className,filename,result))
 
 
-    def ReadDicList(self,filename):
+    def DicList_read(self,filename):
         # 读取DicList
         templist = []
         className = '__ReadDicList__'
@@ -170,39 +200,9 @@ class FileController(object):
                 elif(format=='.json'):
                     templist = json.loads(file.read())
 
-            self.loclog.write("%s%s文件[%s]读取[成功]"%(self.confdic["className"],className,filename))
+            self.Log_write("%s%s文件[%s]读取[成功]"%(self.confdic["className"],className,filename))
         except Exception as result:
-            self.loclog.write("%s%s文件[%s]读取[失败]:%s"%(self.confdic["className"],className,filename,result))
+            self.Log_write("%s%s文件[%s]读取[失败]:%s"%(self.confdic["className"],className,filename,result))
         finally:
             #print(templist)
             return templist
-
-
-
-if __name__=='__main__':
-
-    TestSave = FileController()
-
-    # 配置文件写入和读取
-    dic={'endLog':"加载FileController模块。。。OK","contentHome":"./content/"}
-    TestSave.Conf_write(TestSave.configFilePath,dic)
-    #print(TestSave.Conf_read(TestSave.configFilePath))
-
-    # 创建完整文件夹
-    TestSave.CreatDir('./content/Test')
-
-
-    # Diclist写入和读取
-    dic1={'time':"1","loc":"12,13"}
-    dic2={'time':"2","loc":"1,3"}
-    diclist = []
-    diclist.append(dic1)
-    diclist.append(dic2)
-    TestSave.SaveDicList('./content/Test/testjson.json',diclist)
-    TestSave.ReadDicList('./content/Test/testjson.json')
-
-    configFilePath = './content/Test/testjson.json'
-    #print(os.path.split(configFilePath)[0])
-
-
-

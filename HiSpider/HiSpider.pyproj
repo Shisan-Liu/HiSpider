@@ -27,7 +27,6 @@
     <Compile Include="HiSpider.py" />
     <Compile Include="Static\analyze.py" />
     <Compile Include="Static\classsify.py" />
-    <Compile Include="Static\log.py" />
     <Compile Include="Static\main.py" />
     <Compile Include="Static\module.py">
       <SubType>Code</SubType>

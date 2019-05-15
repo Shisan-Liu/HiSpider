@@ -21,146 +21,137 @@
 # =============================================================================
 # =============================================================================
 
+from Static.filecontroller import FileController
+
+class Module():
+    def __init__(self,modulename):
+        self.FC = FileController()
+        
+        self.confdic = {
+            "MoudleName":modulename,
+            "ModuleHome":"./content/"+modulename,
+            "MoudleTempHome":"./content/"+modulename+"/Temp",
+            "MoudleConfHome":"./content/"+modulename+"/Conf",
+            "MoudleTempHtmlHome":"./content/"+modulename+"/Temp/Html",
+            "confFilePath":"./content/"+modulename+"/Conf"+"/Conf.conf",
+            "testcontent":""
+            }
+
+        #  加载或创建各配置文件
+        # 调用流程：
+        # 创建时，生成配置文件夹并使用默认字典生成配置文件
+        # 打开时，用配置文件中的变量初始化字典
+        self.FC.Conf_load(self.confdic)
+        # 检测并创建某些文件目录
+        self.FC.CreateDir(self.confdic["MoudleTempHtmlHome"])
+        self.html={
+            "confFilePath":self.confdic["MoudleConfHome"]+"/html.conf",
+            "sourcePath":self.confdic["MoudleTempHtmlHome"]+'/source.html',
+            "source":""
+            }
+        # 创建这个配置文件的目的是记录生成的文件的path，以便打开
+        self.FC.Conf_load(self.html)
+        self.diclist = {
+            "confFilePath":self.confdic["MoudleConfHome"]+"/diclist.conf",
+            "diclistPath":"",
+            "diclist":[]
+            }
+        self.FC.Conf_load(self.diclist)
 
 
-from Static.filecontroller import FileController as FC
-from Static.log import Log
-class Model(object):
-    def __init__(self,modelname):
-        self.classname = "Model_"+modelname
-        self.startLog =  '=====================读取'+modelname+'.conf。。。====================='          # Log信息
-        self.endLog = '=====================加载'+modelname+'成功====================='
+    def Confdic_get(self):
+        # 获取配置文件dic进行修改，还需要再封装一个edit应用层
+        return self.FC.Conf_read(self.confdic["confFilePath"])
 
-        self.html = ''
-        self.diclist = []                               #最终字典列表
+    def Confdic_set(self,dic):
+        # 修改读取的confdic后调用保存修改，并刷新当前配置
+        self.FC.Conf_write(dic)     
+        self.confdic = dic
 
-        self.contentHome = './content/'                 # 文件保存根目录  
-        self.modelHome = ''
-        self.tempHome = ''
-        self.htmlHome = ''
+    # 使用流程：
+    # 创建时 set Html_Source（保存到内存）==> save（保存到本地）
+    # 打开时 html = Html_Source_get(self)（并在内存中记录self.html["source"]）
+    def Html_Source_set(self,html):
+        # 设置html[source]
+        self.html["source"] = html
 
-        # 加载Log模块
-        self.loclog = Log()
-        # 开始初始化
-        self.loclog.write(self.classname+self.startLog)
-        # 加载文件控制器模块
-        self.fileController = FC()
-        # 加载配置文件测试
-        try:
-            confdic = self.Conf_read(self.configFilePath)
-            for k in confdic.keys():
-                if(k=='endLog'):
-                    self.endLog = confdic[k]
-            self.loclog.write("配置文件[%s]创建[成功]"%(self.configFilePath))
-        except Exception as result:
-            self.loclog.write("配置文件[%s]创建[失败]:%s"%(self.configFilePath,result))
-        # 结束初始化
-        self.loclog.write(self.classname+self.endLog)
+    def Html_Source_save(self):
+        # 保存HTML字典中源代码到指定文件
+        self.FC.File_write(self.html["sourcePath"],self.html["source"])
+    def Html_Source_get(self):
+        # 获取（并用保存的文件设置）html[source]
+        if(self.html["source"] == ""):
+            self.html["source"] = self.FC.File_read(self.html["sourcePath"])
+        return self.html["source"]
 
+    # 使用流程：
+    # 创建时 首先调用set设置此实例的self.diclist["diclist"] 再保存到本地并设置path，更新配置文件
+    def Diclist_set(self,diclist):
+        self.diclist["diclist"] = diclist
+    def Diclist_save(self,filename):
+        # 保存到文件并设置path
+        # filename = 名字.后缀
+        path = self.confdic["ModuleHome"]+'/'+filename
+        
+        # 修改配置文件中的path和变量
+        tempdic = self.FC.Conf_read(self.diclist["confFilePath"])
+        tempdic["diclistPath"]=path
+        self.FC.Conf_write(tempdic)
+        self.diclist["diclistPath"] = path
+
+        self.FC.DicList_write(path,self.diclist["diclist"])
+
+    def Diclist_get(self):
+        if(self.diclist["diclist"]==""):
+            self.diclist["diclist"] = self.FC.DicList_read(self.diclist["diclistPath"])
+        return self.diclist["diclist"]
 
     
-
-
-
-
-    def SaveConf(self,contentHome,modelname):
-        # 配置文件,创建模型文件夹，写入配置文件
-        className = "locConf_save_"+modelname+'_'
-
-        self.modelHome = contentHome+modelname       #ModelHome
-        self.CheckAndMakeDir(modelHome)
-        self.tempHome = modelHome+'/temp'            #tempHome
-        self.CheckAndMakeDir(tempHome)
-        self.htmlHome = tempHome+'/html/'            #htmlHome
-        self.CheckAndMakeDir(htmlHome)
-
-        try:
-            list = []
-            list.append('modelHome '+ self.modelHome)
-            list.append('tempHome '+ self.tempHome)
-            list.append('htmlHome '+ self.htmlHome)
-
-
-            path = self.modelHome+'/model.conf'
-
-            with open(path,'w') as conf:
-                for line in list:
-                    conf.write(line)
-                    conf.write('\n')
-            self.loclog.write("%s%s配置文件[%s]保存[成功]"%(self.classname,className,path))
-        except Exception as result:
-            self.loclog.write("%s%s配置文件[%s]保存[失败]:%s"%(self.classname,className,path,result))
-
-
-    def LoadConf(self,contentHome,modelname):
-
-        path = contentHome+modelname+'/model.conf'
-        with open(path,'r') as f:
-            for i,line in enumerate(f.readlines()):
-                try:
-                    if(line[0]!='#'):
-                        linecontent = line.split(' ')
-                        if(linecontent[0]=='modelHome'):
-                            self.modelHome = linecontent[1][0:-1]
-                            print(modelHome)
-                        elif(linecontent[0]=='tempHome'):
-                            self.tempHome = linecontent[1][0:-1]
-                            print(tempHome)
-                        elif(linecontent[0]=='htmlHome'):
-                            self.htmlHome = linecontent[1][0:-1]
-                            print(htmlHome)
-                except:
-                    self.loclog.write(self.classname+className+'第'+i+'行异常:'+line)
-
-    def html_save(self,html,modelname):
-        # 将.html文件保存到TEMP文件夹下,返回编号由其模型配置文件记录
-        className = "HtmlSaver_"+modelname+'_'
-
-        if(self.CheckLocConfig()):
-            #如果有配置文件就直接从配置文件中获取路径
-
-        else:
-            self.locConf_save()
-            #否则调用locConf_save函数创建文件夹和配置文件，再从配置文件中读取
-
-        modelHome = self.contentHome+modelname
-        self.CheckAndMakeDir(modelHome)
-        tempHome = modelHome+'/temp'
-        self.CheckAndMakeDir(tempHome)
-        htmlHome = tempHome+'/html/'
-        self.CheckAndMakeDir(htmlHome)
-        
-        num = 0
-        path = htmlHome+str(num)+'.html'
-
-        try:
-            while(os.path.exists(path)==True):
-                num+=1
-                path = htmlHome+str(num)+'.html'
-
-            with open(path,'w',encoding='utf-8') as f:
-                f.write(html)
-            self.loclog.write("%s%sHTML[%s]保存[成功]"%(self.classname,className,path))
-            return num
-
-        except Exception as result:
-            self.loclog.write("%s%sHTML[%s]保存[失败]:"%(self.classname,className,path,result))
-
-    def content_save(self,modelname,format,diclist):
-        # 构造文件path并调用保存DiclistContent
-        htmlHome = self.contentHome+modelname
-        self.CheckAndMakeDir(htmlHome)
-        # 取消Index+time命名
-        #curtime =  time.localtime(time.time())
-        #file_sec = str(curtime.tm_year)+'-'+ str(curtime.tm_mon)+'-'+ str(curtime.tm_mday)      
-        num = 0
-        path = htmlHome+'/'+str(num)+format
-        while(os.path.exists(path)==True):
-            num+=1
-            path = htmlHome+'/'+str(num)+format
-        if(path==False):self.loclog.write('文件夹名构造异常')
-        else:self.SaveFile(path,diclist,format)
+    #def Conf_edit(self,sourcedic)
+    #编辑配置文件，可以用回调函数
 
 if __name__=='__main__':
-    TestLog = Log()
-    TestSave = FileController(TestLog)
+
+    baidu = Module("baidu")
+    #配置文件修改流程
+    tempdic = baidu.Confdic_get()
+    print(tempdic)
+    tempdic["testcontent"] = "在UI或文件中修改"
+    baidu.Confdic_set(tempdic)
+    print(baidu.confdic)
+
+    # 创建模型，需要set并saveHTML源代码
+    baidu.Html_Source_set('这是一段完整的html代码')#  设置
+    baidu.Html_Source_save()
+    print(baidu.Html_Source_get())# 获取之后在UI或者命令行中显示
+
+
+    # Diclist写入和读取
+    dic1={'time':"1","loc":"12,13"}
+    dic2={'time':"2","loc":"1,3"}
+    diclist = []
+    diclist.append(dic1)
+    diclist.append(dic2)
+
+    filename1 = '1.json'
+
+    baidu.Diclist_set(diclist)
+    print(baidu.diclist["diclist"])
+
+    baidu.Diclist_save(filename1)
+    print(baidu.Diclist_get())
+
+
+
+
+
+
+'''
+baidu = Module("baidu")
+
+print(baidu.Html_Source_get())
+
+print(baidu.diclist["diclist"])
+
+print(baidu.Diclist_get())
+'''
