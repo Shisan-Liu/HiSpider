@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>78c446f7-6187-4714-a74c-68a78b5d9914</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>HiSpider.py</StartupFile>
+    <StartupFile>Static\main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,16 +24,23 @@
     <Compile Include="Function.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HiSpider.py" />
-    <Compile Include="Static\analyze.py" />
+    <Compile Include="Static\urlrequest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\DiclistModule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\ListView.py" />
+    <Compile Include="UI\MainUI.py" />
+    <Compile Include="Analyze\Analyze.py" />
     <Compile Include="Static\classsify.py" />
     <Compile Include="Static\main.py" />
     <Compile Include="Static\module.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\ModuleItem.py" />
     <Compile Include="Static\myRequests.py" />
     <Compile Include="Static\filecontroller.py" />
-    <Compile Include="Static\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Analyze\" />
@@ -41,21 +48,9 @@
     <Folder Include="Dynamic\" />
     <Folder Include="log\" />
     <Folder Include="Config\" />
+    <Folder Include="UI\" />
     <Folder Include="Static\" />
-    <Folder Include="Static\__pycache__\" />
     <Folder Include="Verify\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Static\__pycache__\analyze.cpython-36.pyc" />
-    <Content Include="Static\__pycache__\analyze.cpython-37.pyc" />
-    <Content Include="Static\__pycache__\log.cpython-36.pyc" />
-    <Content Include="Static\__pycache__\log.cpython-37.pyc" />
-    <Content Include="Static\__pycache__\MyRequests.cpython-36.pyc" />
-    <Content Include="Static\__pycache__\MyRequests.cpython-37.pyc" />
-    <Content Include="Static\__pycache__\save.cpython-36.pyc" />
-    <Content Include="Static\__pycache__\save.cpython-37.pyc" />
-    <Content Include="Static\__pycache__\SpidersTools.cpython-36.pyc" />
-    <Content Include="Static\__pycache__\__init__.cpython-36.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

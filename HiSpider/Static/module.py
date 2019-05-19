@@ -25,108 +25,64 @@ from Static.filecontroller import FileController
 
 class Module():
     def __init__(self,modulename):
-        self.FC = FileController()
-        
         self.confdic = {
+            "confFilePath":"./content/"+modulename+"/Conf/Conf.json",
+
             "MoudleName":modulename,
+
             "ModuleHome":"./content/"+modulename,
-            "MoudleTempHome":"./content/"+modulename+"/Temp",
-            "MoudleConfHome":"./content/"+modulename+"/Conf",
-            "MoudleTempHtmlHome":"./content/"+modulename+"/Temp/Html",
-            "confFilePath":"./content/"+modulename+"/Conf"+"/Conf.conf",
-            "testcontent":""
+
+            "url":"",
+            "format":"",
+            #HTML
+            "MoudleTempHtmlHome":"./content/"+modulename+"/Html",
+            "htmlPath":"./content/"+modulename+"/Html/source.html",
+            "html":"",
+            #Diclist
+            "htmlcode":"utf-8",
+            "diclist":[]
             }
 
         #  加载或创建各配置文件
-        # 调用流程：
-        # 创建时，生成配置文件夹并使用默认字典生成配置文件
-        # 打开时，用配置文件中的变量初始化字典
+        self.FC = FileController()
         self.FC.Conf_load(self.confdic)
-        # 检测并创建某些文件目录
-        self.FC.CreateDir(self.confdic["MoudleTempHtmlHome"])
-        self.html={
-            "confFilePath":self.confdic["MoudleConfHome"]+"/html.conf",
-            "sourcePath":self.confdic["MoudleTempHtmlHome"]+'/source.html',
-            "source":""
-            }
-        # 创建这个配置文件的目的是记录生成的文件的path，以便打开
-        self.FC.Conf_load(self.html)
-        self.diclist = {
-            "confFilePath":self.confdic["MoudleConfHome"]+"/diclist.conf",
-            "diclistPath":"",
-            "diclist":[]
-            }
-        self.FC.Conf_load(self.diclist)
+
+    def GetValue(self,key):
+        return self.confdic[key]    
+
+    def SetUHF(self,url,html,format,htmlcode):
+        self.FC.Conf_edit(self.confdic,"url",url)
+        self.FC.Conf_edit(self.confdic,"html",str(html))
+        self.FC.Conf_edit(self.confdic,"format",format)
+        self.FC.Conf_edit(self.confdic,"htmlcode",htmlcode)
+        self.FC.File_write(self.confdic["htmlPath"],self.confdic["html"],self.confdic["htmlcode"])
 
 
-    def Confdic_get(self):
-        # 获取配置文件dic进行修改，还需要再封装一个edit应用层
-        return self.FC.Conf_read(self.confdic["confFilePath"])
+    def SetDiclist(self,diclist):
+        self.FC.Conf_edit(self.confdic,"diclist",diclist)
 
-    def Confdic_set(self,dic):
-        # 修改读取的confdic后调用保存修改，并刷新当前配置
-        self.FC.Conf_write(dic)     
-        self.confdic = dic
-
-    # 使用流程：
-    # 创建时 set Html_Source（保存到内存）==> save（保存到本地）
-    # 打开时 html = Html_Source_get(self)（并在内存中记录self.html["source"]）
-    def Html_Source_set(self,html):
-        # 设置html[source]
-        self.html["source"] = html
-
-    def Html_Source_save(self):
-        # 保存HTML字典中源代码到指定文件
-        self.FC.File_write(self.html["sourcePath"],self.html["source"])
-    def Html_Source_get(self):
-        # 获取（并用保存的文件设置）html[source]
-        if(self.html["source"] == ""):
-            self.html["source"] = self.FC.File_read(self.html["sourcePath"])
-        return self.html["source"]
-
-    # 使用流程：
-    # 创建时 首先调用set设置此实例的self.diclist["diclist"] 再保存到本地并设置path，更新配置文件
-    def Diclist_set(self,diclist):
-        self.diclist["diclist"] = diclist
-    def Diclist_save(self,filename):
-        # 保存到文件并设置path
-        # filename = 名字.后缀
+    def SaveDiclist(self,filename):
+        # 设置path并保存到文件:filename = 名字.后缀
         path = self.confdic["ModuleHome"]+'/'+filename
         
-        # 修改配置文件中的path和变量
-        tempdic = self.FC.Conf_read(self.diclist["confFilePath"])
-        tempdic["diclistPath"]=path
-        self.FC.Conf_write(tempdic)
-        self.diclist["diclistPath"] = path
+        self.FC.Conf_edit(self.confdic,"confFilePath",path)
+        self.FC.DicList_write(path,self.confdic["diclist"])
 
-        self.FC.DicList_write(path,self.diclist["diclist"])
 
-    def Diclist_get(self):
-        if(self.diclist["diclist"]==""):
-            self.diclist["diclist"] = self.FC.DicList_read(self.diclist["diclistPath"])
-        return self.diclist["diclist"]
 
-    
-    #def Conf_edit(self,sourcedic)
-    #编辑配置文件，可以用回调函数
 
 if __name__=='__main__':
-
-    baidu = Module("baidu")
-    #配置文件修改流程
-    tempdic = baidu.Confdic_get()
-    print(tempdic)
-    tempdic["testcontent"] = "在UI或文件中修改"
-    baidu.Confdic_set(tempdic)
-    print(baidu.confdic)
-
-    # 创建模型，需要set并saveHTML源代码
-    baidu.Html_Source_set('这是一段完整的html代码')#  设置
-    baidu.Html_Source_save()
-    print(baidu.Html_Source_get())# 获取之后在UI或者命令行中显示
+    # 创建模型
+    baidu = Module("ModuleTest")
 
 
-    # Diclist写入和读取
+    #设置HTML以显示(FC.Conf_edit测试)
+    baidu.SetHtml('这是一段完整的html代码')
+    #获取HTML
+    print(baidu.GetHtml())
+    #保存HTML（FC.File_write测试）
+    baidu.SaveHtml()
+
     dic1={'time':"1","loc":"12,13"}
     dic2={'time':"2","loc":"1,3"}
     diclist = []
@@ -135,23 +91,10 @@ if __name__=='__main__':
 
     filename1 = '1.json'
 
-    baidu.Diclist_set(diclist)
-    print(baidu.diclist["diclist"])
-
-    baidu.Diclist_save(filename1)
-    print(baidu.Diclist_get())
-
-
-
-
-
-
-'''
-baidu = Module("baidu")
-
-print(baidu.Html_Source_get())
-
-print(baidu.diclist["diclist"])
-
-print(baidu.Diclist_get())
-'''
+    #设置Diclist
+    baidu.SetDiclist(diclist)
+    #获取Diclist
+    print(baidu.GetDiclist())
+    #保存Diiclist
+    baidu.SaveDiclist(filename1)
+    #print(baidu.confdic)

@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*- 
 # =============================================================================
 # 进展
 # 目前为止我只实现了根据文本的特征进行分类
 
 # =============================================================================
-
+# 文章页面找文字最多的div和h
+# 首页根据h找兄弟节点，找h的父节点的兄弟节点，找ul，找tr
 
 
 # =============================================================================
@@ -22,7 +23,8 @@
 # 3-还无法确定字典的键
 # 4-一个字典里面的字段也无法确定
 # =============================================================================
-
+from Static.myRequests import MyRequest as Request
+from Static.urlrequest import urlrequest as uq
 
 from lxml import etree
 from pyquery import PyQuery as pq
@@ -38,13 +40,9 @@ class node(object):
     def SetNum(self):
         self.num = len(self.childlist)          #用子列表长度设置子层级长度
 
-class mainAnalyze(object):
+class Analyze(object):
     def __init__(self):
         self.html = ''
-        # 过滤参数
-        self.MinChildNum = 0                    # 节点中至少包含子节点数
-        self.MaxEngishNum = 0                   # 节点中最多包含英文字符数目
-        
         self.allnodelist = []                   # 所有节点
         self.diclist = []                       # 最终的字典列表
         
@@ -65,21 +63,24 @@ class mainAnalyze(object):
             self.allnodelist.append(parentnode)             # 该节点添加到列表中
         return parentnode.childlist
     
-    # 生成树并设置节点中的属性，并对树进行排序
-    def start(self,html,minchildnum=5,maxengishnum=40):
+    def prepare(self,html):
         # 清理
         self.allnodelist = []
         self.diclist = []
-        # 设置参数
-        self.html = html
-        self.MinChildNum = minchildnum
-        self.MaxEngishNum = maxengishnum
 
-        html = etree.HTML(self.html)
+        html = etree.HTML(html)
         result = etree.tostring(html)       
         html = result.decode('utf-8')                       # 补全html代码
-        doc = pq(html)                                      # 转换为pq类型  
-        parentnode = node(doc)                              # 把pq类型的html代码转换成node节点
+        # 设置参数
+        self.html = html
+
+    # 生成树并设置节点中的属性，并对树进行排序
+    def start(self,html):
+        self.prepare(html)
+
+
+        self.doc = pq(self.html)                                 # 转换为pq类型  
+        parentnode = node(self.doc)                              # 把pq类型的html代码转换成node节点
         self.parentlist = []
         self.parentlist.append(parentnode)                  # 节点添加到列表
         # 生成节点树
@@ -93,9 +94,9 @@ class mainAnalyze(object):
                 elif(code>=19968):eachnode.chinese += 1
             if(eachnode.engish!=0):
                 eachnode.rate = eachnode.chinese/eachnode.engish
-        self.allnodelist.sort(reverse=True,key=lambda node:node.num)
-        
-        self.SpawnDic()
+        self.allnodelist.sort(reverse=True,key=lambda node:node.num)    #从大到小排序
+        self.diclist = self.FindHBorther()
+        #self.SpawnDic()
     
     # 根据子节点数过滤
     def getNodeListNumLessX(self,nodelist,x):
@@ -129,8 +130,75 @@ class mainAnalyze(object):
         
         # 生成字典
         for i,node in enumerate(CurrentNodeList):
+            childlis = []
             for child in node.childlist:
                 if(child.data.text()!=''):
                     dic = {i:child.data.text()}
-                    self.diclist.append(dic)
-    
+                    childlis.append(dic)
+            self.diclist.append(childlis)
+
+    #h的兄弟节点
+    def  FindHBorther(self):
+        # 'http://www.people.com.cn/'
+        hlist = []
+        h2 = self.doc("h3")
+        #print(h2)
+        for i,h in enumerate(h2):
+            hdic = {}
+            pqh = pq(h)
+            pqhtxt = pqh.text()
+            print(pqhtxt)
+            hdic["title"] = pqhtxt
+            content = []
+            # h2的兄弟节点
+            hbor = pqh.siblings()
+            for bor in hbor:
+                achbor = pq(bor)
+                txt = achbor.text()
+                content.append(txt)
+            hdic["content"] = content
+            hlist.append(hdic)
+        return hlist
+
+                
+
+
+# ul列表
+def ul():
+    # 'http://www.aweb.com.cn/'
+    ullist = doc('ul')
+    for i in ullist:
+        pqul = pq(i)
+        print(pqul.text())
+
+if __name__=="__main__":
+    url = 'http://www.people.com.cn/'
+
+    urlq = uq()
+    html = urlq.GetHtml(url)
+    print(type(html))
+    print(html)
+    ana = Analyze()
+    #ana.start(html)
+
+'''
+doc = pq(html)
+
+htmlTitle = doc("title").text()
+print(htmlTitle)
+
+ullist = doc('table')
+for i in ullist:
+    pqul = pq(i)
+    print(pqul)
+
+divlist = doc('div')
+for item in divlist:
+    eachdiv = pq(item)
+    #print()
+    #print(eachdiv.attr("class"),eachdiv.attr("id"))
+    print(eachdiv)
+'''
+
+
+

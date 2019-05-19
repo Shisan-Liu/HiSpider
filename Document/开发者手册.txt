@@ -1,0 +1,44 @@
+# =============================================================================
+FileController
+# =============================================================================
+全局变量
+    self.confdic = {
+        "confFilePath":'./Config/FileController.json',
+        "logHome":'./log',
+		"className":"FileController",
+        }
+
+
+函数
+	DicList读写：
+		支持格式：TXT、CSV、JSON
+		[Void DicList_write(filename,diclist)]
+		[Diclist DicList_read(filename)]
+
+	配置文件：
+		需要设置配置文件的类,需要设置一个confdic字典，保存需要保存的变量，必须包含配置文件路径键值"confFilePath"
+		路径标准："confFilePath":'./Config/FileController.json',
+		并且在构造时调用self.Conf_load(self.confdic)
+
+		创建类时，首先检测配置文件是否存在
+		[Void Conf_write(confdic)]不存在就创建并把confdic默认配置写入配置文件
+
+		[Void Conf_load(confdic)]存在则加载配置文件到confdic字典
+
+		需要修改配置文件时（UI和程序），首先从本地读取配置文件
+		[Void Conf_read(filepath)]读取本地配置文件是根据"confFilePath"值进行
+
+		修改配置文件并更新confdic
+		[Void Conf_edit(confdic,key,value)]
+
+	普通文件读写：
+		[Void File_write(filename,content)]
+		[Str File_read(filename)]
+
+	文件夹检测与创建：
+		[Void CreateDir(dirpath)]生成完整路径
+		路径标准：dirpath = './t123est/automakedir/test2'
+
+	日志文件读写：
+		[Void Log_write(logstr)]
+

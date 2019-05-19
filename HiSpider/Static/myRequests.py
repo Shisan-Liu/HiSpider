@@ -40,6 +40,21 @@
 # -*- coding: utf-8 -*-
 # r.history 请求历史
 
+
+# 对于报头content-type没有说明编码方式的需要识别并转码
+#r.encoding='utf-8'
+
+#print(r.headers)
+#html =r.read()
+
+#code = chardet.detect(html)["encoding"]
+#print(code)
+
+#headers = {'User-Agent':'Mozilla/5.0(Macintosh;Intel Mac OS X 10_11_4) AppleWebKit/537.36(KHTML,like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
+#x = requests.get(url, headers)
+#x.encoding=code
+
+
 import requests
 import urllib3
 # 输入Request属性，输出HTML源码
@@ -113,14 +128,18 @@ class MyRequest(object):
             return False 
         
         try:
-            r = requests.get(self.url, headers=self.headers, data=self.data)
+            headers = {'User-Agent':'Mozilla/5.0(Macintosh;Intel Mac OS X 10_11_4) AppleWebKit/537.36(KHTML,like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
+            r = requests.get(self.url, headers, data=self.data)
+
             print(r.url,r.status_code)
             return r.text
         except:
             print("请求错误")
             return False;
 
-
+if __name__ == '__main__':
+    mr = MyRequest()
+    url = 'https://www.gameres.com/'
 #####################################################################################################################
 # 使用会话，维持了网页
 
