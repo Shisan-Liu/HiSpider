@@ -65,14 +65,19 @@ class HiSpider:
         #html = self.Request.gethtml(url)
 
         NewModule = Module(modulename)
-
+        modulehome = NewModule.GetValue("ModuleHome")
         NewModule.SetUHF(url,html,format,htmlcode)
 
         self.UI.ShowModule(html)
 
         self.UI.pListView.addItem(NewModule)
         time.sleep(1)
-        self.UI.ShowDiclist(self.GetAnalyzeDiclist(html))
+        diclist = self.GetAnalyzeDiclist(html)
+
+        self.UI.ShowDiclist(diclist,modulehome)
+
+    def SaveDic(self,filename,diclist):
+        self.FC.DicList_write(filename,diclist)
 
 
     def GetAnalyzeDiclist(self,html):

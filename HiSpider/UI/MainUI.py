@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from UI.ListView import ListView
 from UI.DiclistModule import DiclistWidget
+import json
 #from Static.main import HiSpider  as HS
 import sys
 
@@ -144,6 +145,21 @@ class UserInterface(QWidget):
         self.ButtomWidget.setFixedHeight(300)
         self.RightBox.addWidget(self.ButtomWidget)
 
+        self.ButtomGLayout = QGridLayout()
+        self.ButtomWidget.setLayout(self.ButtomGLayout)
+
+        names = ["name"*25]
+
+        for i in range(1,5):
+            for j in range(1,5):
+                exportBurrom = QPushButton("export")
+                exportBurrom.clicked.connect(self.Export)
+                self.ButtomGLayout.addWidget(exportBurrom,i,j,1,1)
+
+        #self.ButtomGLayout.setSpacing(10)
+        # 创建19个按钮
+
+
 
         #self.MainBox.addWidget(self.tabWidget)
 
@@ -174,14 +190,28 @@ class UserInterface(QWidget):
         format = self.GetFormat()
         self.HiSpider.SendRequest(url,modulename,format)
 
-    def ShowDiclist(self,diclist):
-
+    def ShowDiclist(self,diclist,modulehome):
+        self.filename = modulehome+"/dic.csv"
         #self.ScroWidgetVBox.removeWidget()
+        self.widgetlist = []
         for i in diclist:
             dw = DiclistWidget(i)
-
-
+            self.widgetlist.append(dw)
             self.ScroWidgetVBox.addWidget(dw)
+
+    def Export(self):
+        dic = {}
+        for w in self.widgetlist:
+            if(w.isSelect):
+                dic[w.key] = str(w.vallist)
+        diclist = []
+        diclist.append(dic)
+        print(self.filename)
+        print(dic)
+        with open("test.txt",'w',encoding='utf-8') as file:
+            
+            file.write("qweqwe")
+
 
 
     def ShowModule(self,html):

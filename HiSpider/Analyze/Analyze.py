@@ -40,6 +40,8 @@ class node(object):
     def SetNum(self):
         self.num = len(self.childlist)          #用子列表长度设置子层级长度
 
+
+
 class Analyze(object):
     def __init__(self):
         self.html = ''
