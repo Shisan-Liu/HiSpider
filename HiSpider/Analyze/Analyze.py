@@ -22,6 +22,7 @@
 # 2-还没有找到合适的去除重复的方法
 # 3-还无法确定字典的键
 # 4-一个字典里面的字段也无法确定
+# 一个div中的文字，有\n，需要再分割
 # =============================================================================
 from Static.myRequests import MyRequest as Request
 from Static.urlrequest import urlrequest as uq
@@ -157,7 +158,9 @@ class Analyze(object):
             for bor in hbor:
                 achbor = pq(bor)
                 txt = achbor.text()
-                content.append(txt)
+                lines = txt.split("\n")
+                for line in lines:
+                    content.append(line)
             hdic["content"] = content
             hlist.append(hdic)
         return hlist

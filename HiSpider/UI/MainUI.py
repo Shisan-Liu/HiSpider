@@ -12,14 +12,12 @@ import sys
 class UserInterface(QWidget):
     def __init__(self,HiSpidier):
         super().__init__()
-        # 控制器
+
         self.HiSpider = HiSpidier
-        # GUI
+        self.currentFormat = ".json"
+
         self.initUI()
         self.show()
-
-        self.ModuleIndex = 0
-
 
     def initUI(self):
 
@@ -38,6 +36,7 @@ class UserInterface(QWidget):
 
         self.LeftBox = QVBoxLayout()
         self.LeftWidget.setLayout(self.LeftBox)
+
         self.MainBox.addWidget(self.LeftWidget)
 
         ## URL数据框
@@ -63,18 +62,23 @@ class UserInterface(QWidget):
 
         self.LeftBox.addLayout(self.ModelNameBox)
 
-        # 保存格式选择MENU
-        self.SaveFormatLabel = QLabel('保存格式:', self)
+        # 导出文件
+        self.ExportLabel = QLabel('导出文件名:', self)
+        self.ExportInput = QLineEdit('content', self)
+        self.exportBurrom = QPushButton("导出")
+        self.exportBurrom.clicked.connect(self.Export)
+        # 保存格式
+
         self.SaveFormat = QToolButton(self)
         #self.SaveFormat.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         #self.SaveFormat.setArrowType(Qt.DownArrow)             # 设置箭头方向
-        self.SaveFormat.setText(".txt")                         # 设置图标和文字。
+        self.SaveFormat.setText(self.currentFormat)                         # 设置图标和文字。
         self.SaveFormat.setAutoRaise(True)                      # 此属性保持是否启用自动升起
         self.SaveFormat.setPopupMode(QToolButton.InstantPopup)  #按下之后响应模式
         menu = QMenu(self)
-        self.txtAct = QAction('TXT', self)
-        self.jsonAct = QAction('JSON', self)
-        self.mysqlAct = QAction('Mysql', self)
+        self.txtAct = QAction('.txt', self)
+        self.jsonAct = QAction('.json', self)
+        self.mysqlAct = QAction('.csv', self)
         menu.addAction(self.txtAct)
         menu.addAction(self.jsonAct)
         menu.addAction(self.mysqlAct)
@@ -84,8 +88,10 @@ class UserInterface(QWidget):
         self.mysqlAct.triggered.connect(self.SetFormat)
 
         self.SaveFormatBox = QHBoxLayout()
-        self.SaveFormatBox.addWidget(self.SaveFormatLabel)
+        self.SaveFormatBox.addWidget(self.ExportLabel)
+        self.SaveFormatBox.addWidget(self.ExportInput)
         self.SaveFormatBox.addWidget(self.SaveFormat)
+        self.SaveFormatBox.addWidget(self.exportBurrom)
 
         self.LeftBox.addLayout(self.SaveFormatBox)        
 
@@ -95,39 +101,34 @@ class UserInterface(QWidget):
 
         self.LeftBox.addWidget(self.pListView)
 
-
-        #self.MainBox.addLayout(self.LeftWidget)
-
-
-
         # 右侧纵向布局RightBox
         #######################################################################
         self.RightBox = QVBoxLayout()
-
         self.MainBox.addLayout(self.RightBox)
+
         # tab内容标签
         self.tabWidget = QTabWidget()
         self.RightBox.addWidget(self.tabWidget)
-        #self.tabWidget.setObjectName("tabWidget")
+
         # 第一页
         self.HtmlTab = QWidget()
-        #self.tab.setObjectName("tab1")
-        # HTML显示窗口
-        self.Content1 = QTextEdit(self)
-        #self.Content1.setGeometry(20, 20, 300, 270)
         self.Content1Box = QVBoxLayout()
-        self.Content1Box.addWidget(self.Content1)
         self.HtmlTab.setLayout(self.Content1Box)
         self.tabWidget.addTab(self.HtmlTab, "  HTML  ")
+        # HTML显示窗口
+        self.Content1 = QTextEdit(self)
+        self.Content1Box.addWidget(self.Content1)
+
+
 
         # 第二页
         self.DiclistTab = QWidget()
         self.DiclistVBox = QVBoxLayout()
         self.DiclistTab.setLayout(self.DiclistVBox)
-        #self.tab2.setObjectName("tab2")
+        self.tabWidget.addTab(self.DiclistTab, "  Diclist  ")
 
+        # 滚动条
         self.ScroWidget = QWidget()
-
         self.ScroWidgetVBox = QVBoxLayout()
         self.ScroWidget.setLayout(self.ScroWidgetVBox)
 
@@ -138,11 +139,11 @@ class UserInterface(QWidget):
         self.DicScrollArea.setAutoFillBackground(True)
         self.DicScrollArea.setWidgetResizable(True)
 
-        self.tabWidget.addTab(self.DiclistTab, "  Diclist  ")
+
 
         # 底部固定显示框
         self.ButtomWidget = QWidget()
-        self.ButtomWidget.setFixedHeight(300)
+        self.ButtomWidget.setFixedHeight(200)
         self.RightBox.addWidget(self.ButtomWidget)
 
         self.ButtomGLayout = QGridLayout()
@@ -152,14 +153,13 @@ class UserInterface(QWidget):
 
         for i in range(1,5):
             for j in range(1,5):
-                exportBurrom = QPushButton("export")
-                exportBurrom.clicked.connect(self.Export)
-                self.ButtomGLayout.addWidget(exportBurrom,i,j,1,1)
+                if(i==1 and j==1):
+                    exportBurrom = QPushButton("export")
+                    exportBurrom.clicked.connect(self.Export)
+                    self.ButtomGLayout.addWidget(exportBurrom,i,j,1,1)
 
         #self.ButtomGLayout.setSpacing(10)
         # 创建19个按钮
-
-
 
         #self.MainBox.addWidget(self.tabWidget)
 
@@ -170,77 +170,73 @@ class UserInterface(QWidget):
         # ％p - 被完成的百分比取代
         # ％v - 被当前值替换
 
+
         #self.RightBox.addLayout(self.Content1Box)
         #self.RightBox.addWidget(self.probar)
         # MainBox
 
+
         #self.grid = QGridLayout()
         #self.grid.addWidget(self.LeftBox,0,0,1,1)
         #self.grid.addWidget(self.RightBox,0,1,1,1)
-        # 把垂直布局盒子设置成主要的布局
+
 
         #self.setLayout(self.grid)
-
+        self.widgetlist = []    #diclist显示控件列表
+        
 
 
     def SubmitRequest(self):
         # 提交URL获取HTML
         url = self.URLInput.text()
         modulename = self.ModelNameInput.text()
-        format = self.GetFormat()
-        self.HiSpider.SendRequest(url,modulename,format)
+        self.HiSpider.SendRequest(url,modulename)
 
-    def ShowDiclist(self,diclist,modulehome):
-        self.filename = modulehome+"/dic.csv"
-        #self.ScroWidgetVBox.removeWidget()
-        self.widgetlist = []
+
+    def Export(self):
+        # 导出
+        print(self.currentFormat)
+        filename = self.ExportInput.text() + self.currentFormat
+        
+        diclist = []
+        for w in self.widgetlist:
+            if(w.isSelect):
+                dic = {}
+                dic["title"] = w.key
+                dic["content"] = str(w.vallist)
+                diclist.append(dic)
+
+        diclistpath = self.CurrentModule.GetValue("ModuleHome")+'/'+filename
+        self.HiSpider.FC.DicList_write(diclistpath,diclist)
+
+
+    def ShowModule(self,Module):
+        # 显示HTML和Diclist
+        self.CurrentModule = Module         # 此处才声明的当前模型变量，所以在打开之前不能调用导出函数
+        html = self.CurrentModule.GetValue("html")
+        
+        self.Content1.setPlainText(html)# setPlainText纯文本，settext富文本
+        # 清空显示diclist的控件
+        if(len(self.widgetlist)!=0):
+            for i,w in enumerate(self.widgetlist):
+                w.deleteLater()
+                del self.widgetlist[i]
+
+        diclist = self.CurrentModule.GetValue("diclist")
         for i in diclist:
             dw = DiclistWidget(i)
             self.widgetlist.append(dw)
             self.ScroWidgetVBox.addWidget(dw)
 
-    def Export(self):
-        dic = {}
-        for w in self.widgetlist:
-            if(w.isSelect):
-                dic[w.key] = str(w.vallist)
-        diclist = []
-        diclist.append(dic)
-        print(self.filename)
-        print(dic)
-        with open("test.txt",'w',encoding='utf-8') as file:
-            
-            file.write("qweqwe")
-
-
-
-    def ShowModule(self,html):
-
-        #self.probar.setMinimum(0)
-        #self.probar.setMaximum(0)
-        self.Content1.setPlainText(html)            # setPlainText直接设置成纯文本，settext会渲染html富文本
-
 
     def SetFormat(self):
+        # 设置显示
         if self.sender() == self.txtAct:
-            self.SaveFormat.setText(self.SaveFileFormat)
+            self.SaveFormat.setText(".txt")
+            self.currentFormat = ".txt"
         elif self.sender() == self.jsonAct:
-            self.SaveFormat.setText(self.SaveFileFormat)
+            self.SaveFormat.setText(".json")
+            self.currentFormat = ".json"
         elif self.sender() == self.mysqlAct:
-            self.SaveFormat.setText(self.SaveFileFormat)
-
-
-    def GetFormat(self):
-        if self.sender() == self.txtAct:
-            return '.txt'
-        elif self.sender() == self.jsonAct:
-            return '.json'
-        elif self.sender() == self.mysqlAct:
-            return '.mysql'
-
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = UserInterface()
-    sys.exit(app.exec_())
+            self.SaveFormat.setText(".csv")
+            self.currentFormat = ".csv"

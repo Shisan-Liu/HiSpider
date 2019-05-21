@@ -6,17 +6,14 @@ class FileController(object):
     # 初始化
     def __init__(self):
         self.confdic = {
-            "confFilePath":'./Config/FileController.json',
-            "logHome":'./log',
-            "className":"FileController",
-
+                "confFilePath":'./Config/FileController.json',
+                "logHome":'./log',
             }
 
         # 加载Log模块
         self.CreateDir(self.confdic["logHome"])
         # 加载配置文件
         self.Conf_load(self.confdic)
-
 
     def File_write(self,filename,content,encode = "utf-8"):
         # 普通字符串读写
@@ -132,15 +129,10 @@ class FileController(object):
             confdic[k] = tempdic[k]
         self.Conf_write(tempdic)
 
-
-
-
-
     def DicList_write(self,filename,diclist):
-        # 特殊保存方式：两种方式保存Diclist
-        className = '__SaveDicList__'
+
         #try:
-        format = os.path.splitext(filename)[1]
+        format = GetFileFormat(filename)
         with open(filename,'w',encoding='utf-8',newline="") as file:
             if(format=='.csv'):
                 writer = csv.DictWriter(file,fieldnames=list(diclist[0].keys()))    
@@ -155,14 +147,15 @@ class FileController(object):
             #self.Log_write("%s%s文件[%s]保存[成功]"%(self.confdic["className"],className,filename))
         #except Exception as result:
             #self.Log_write("%s%s文件[%s]保存[失败]:%s"%(self.confdic["className"],className,filename,result))
-
+    def GetFileFormat(self,path):
+        return os.path.splitext(path)[1]
 
     def DicList_read(self,filename):
         # 读取DicList
         templist = []
-        className = '__ReadDicList__'
+
         #try:
-        format = os.path.splitext(filename)[1]
+        format = GetFileFormat(filename)
         with open(filename,'r',encoding='utf-8') as file:
             if(format=='.txt'):
                 
@@ -187,3 +180,9 @@ class FileController(object):
         #finally:
             #print(templist)
         return templist
+
+
+if __name__=='__main__':
+    fc = FileController()
+    print(fc.GetFileFormat("/sgdsg/qwe.txt"))
+    print(fc.GetFileFormat("wer"))

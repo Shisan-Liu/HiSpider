@@ -38,6 +38,9 @@ class DiclistWidget(QWidget):
 
         self.ContentInput = QLineEdit(self.key, self)
         self.HBox.addWidget(self.ContentInput)
+        self.ContentInput.setFixedWidth(300)
+        #spacerItem = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.HBox.addStretch(1)
 
     def CheckChanged(self):
         if self.checkbox.isChecked():

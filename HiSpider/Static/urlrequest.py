@@ -11,4 +11,8 @@ class urlrequest(object):
         self.code = chardet.detect(bytesres)["encoding"]
         print(self.code)
         # 解码
-        return bytesres.decode(self.code)
+        souce = bytesres.decode(self.code)
+        # 转码
+        final = souce.encode("utf-8")
+        print(chardet.detect(final)["encoding"])
+        return final.decode("utf-8")
