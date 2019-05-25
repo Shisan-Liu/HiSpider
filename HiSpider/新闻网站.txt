@@ -25,6 +25,52 @@ http://news.cctv.com/
 http://www.qdaily.com/
 
 http://www.k618.cn/
+
+http://www.bjnews.com.cn/
+
+http://www.12371.cn/
+
+http://www.gmw.cn/
+
+https://www.nfcmag.com/
+
+http://www.chinadaily.com.cn/
+
+http://www.lifeweek.com.cn/
+
+http://www.cpd.com.cn/
+
+http://www.banyuetan.org/
+
+http://www.cnautonews.com/
+
+http://www.yidianzixun.com/
+
+http://www.sinovision.net/
+
+http://www.ftchinese.com/
+
+https://news.un.org/zh/
+
+http://bbs.tianya.cn/list-worldlook-1.shtml
+
+https://pl.ifeng.com/
+
+http://www.crntt.com/
+
+https://bbs.tiexue.net/default.htm?ListUrl=https://bbs.tiexue.net/
+
+http://bbs1.people.com.cn/
+
+http://bbs1.people.com.cn/
+
+https://www.guancha.cn/
+
+http://www.m4.cn/
+
+http://bbs.tianya.cn/list-free-1.shtml
+
+http://forum.home.news.cn/
 Ê§°Ü
 https://news.sina.com.cn/
 
@@ -34,8 +80,15 @@ http://news.sohu.com/
 
 http://www.71.cn/
 
-
 http://www.huanqiu.com/?agt=6956
+
+http://www.chinadaily.com.cn/
+
+http://www.xfrb.com.cn/
+
+http://www.oeeee.com/
+
+
 ÎÞ·¨½âÎöhtml±àÂë
 http://www.chinanews.com/
 
@@ -52,16 +105,20 @@ http://www.takungpao.com/
 
 UnicodeDecodeError: 'gb2312' codec can't decode byte 0xd5 in position 5614: illegal multibyte sequence
 http://www.youth.cn/
+http://www.dzwww.com/
+http://www.yangtse.com/
+http://club.kdnet.net/list.asp?boardid=1
+http://www.aisixiang.com/
+AJAX
+http://www.infzm.com/
+
+http 521
+http://www.sxrb.com/
+TypeError: decode() argument 1 must be str, not None
+http://www.haiwainet.cn/
 
 
-
-
-
-
-
-
-
-
+https://edition.cnn.com/
 
 
 

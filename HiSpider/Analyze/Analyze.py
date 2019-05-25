@@ -165,26 +165,33 @@ class Analyze(object):
             hlist.append(hdic)
         return hlist
 
+    def FindUL(self):
+        # http://www.aweb.com.cn/
+        # http://bbs.tianya.cn/list-free-1.shtml
+        uls = []
+        ul = self.doc("ul")
+        print(ul)
+        for i,u in enumerate(ul):
+            children_list = []
+            pqu = pq(u)
+            lis = pqu.children()
+            for li in lis:
+                pqli = pq(li)
+                txt = pqli.text()
+                children_list.append(txt)
+            uls.append(children_list)
+            print(children_list)
                 
 
-
-# ul列表
-def ul():
-    # 'http://www.aweb.com.cn/'
-    ullist = doc('ul')
-    for i in ullist:
-        pqul = pq(i)
-        print(pqul.text())
-
 if __name__=="__main__":
-    url = 'http://www.people.com.cn/'
+    url = 'http://bbs.tianya.cn/list-free-1.shtml'
 
     urlq = uq()
     html = urlq.GetHtml(url)
-    print(type(html))
-    print(html)
+
     ana = Analyze()
-    #ana.start(html)
+    ana.start(html)
+    ana.FindUL()
 
 '''
 doc = pq(html)

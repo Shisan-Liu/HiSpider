@@ -132,7 +132,7 @@ class FileController(object):
     def DicList_write(self,filename,diclist):
 
         #try:
-        format = GetFileFormat(filename)
+        format = self.GetFileFormat(filename)
         with open(filename,'w',encoding='utf-8',newline="") as file:
             if(format=='.csv'):
                 writer = csv.DictWriter(file,fieldnames=list(diclist[0].keys()))    
@@ -155,7 +155,7 @@ class FileController(object):
         templist = []
 
         #try:
-        format = GetFileFormat(filename)
+        format = self.GetFileFormat(filename)
         with open(filename,'r',encoding='utf-8') as file:
             if(format=='.txt'):
                 
