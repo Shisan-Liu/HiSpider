@@ -147,6 +147,8 @@ class FileController(object):
             #self.Log_write("%s%s文件[%s]保存[成功]"%(self.confdic["className"],className,filename))
         #except Exception as result:
             #self.Log_write("%s%s文件[%s]保存[失败]:%s"%(self.confdic["className"],className,filename,result))
+
+
     def GetFileFormat(self,path):
         return os.path.splitext(path)[1]
 

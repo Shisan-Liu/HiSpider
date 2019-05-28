@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectTarget>
+    <TargetProject>78c446f7-6187-4714-a74c-68a78b5d9914</TargetProject>
+    <FriendlyName>HiSpider</FriendlyName>
+  </ProjectTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\13008\AppData\Local\Temp\HiSpider_20190528.vsp</Filename>
+    </Report>
+  </Reports>
+</ProfilingTarget>

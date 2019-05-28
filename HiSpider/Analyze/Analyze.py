@@ -98,7 +98,10 @@ class Analyze(object):
             if(eachnode.engish!=0):
                 eachnode.rate = eachnode.chinese/eachnode.engish
         self.allnodelist.sort(reverse=True,key=lambda node:node.num)    #从大到小排序
-        self.diclist = self.FindHBorther()
+        hs = self.FindHBorther()
+        uls = self.FindUL()
+        self.diclist = hs+uls
+        
         #self.SpawnDic()
     
     # 根据子节点数过滤
@@ -161,8 +164,12 @@ class Analyze(object):
                 lines = txt.split("\n")
                 for line in lines:
                     content.append(line)
+            
             hdic["content"] = content
+            hdic["select"] = False
             hlist.append(hdic)
+        tempdic = {"title":"结束","content":""}
+        hlist.append(tempdic)
         return hlist
 
     def FindUL(self):
@@ -172,15 +179,29 @@ class Analyze(object):
         ul = self.doc("ul")
         print(ul)
         for i,u in enumerate(ul):
-            children_list = []
+            children_dic = {}
             pqu = pq(u)
             lis = pqu.children()
-            for li in lis:
+            content = []
+            for x,li in enumerate(lis):
                 pqli = pq(li)
                 txt = pqli.text()
-                children_list.append(txt)
-            uls.append(children_list)
-            print(children_list)
+                # 以第一个li为标题
+                if(x==0):children_dic["title"] = txt
+                else:
+                    content.append(txt)
+            children_dic["content"] = content
+            children_dic["select"] = False
+            uls.append(children_dic)
+            print(children_dic)
+            ulbor = pqu.siblings()
+
+            for num,bor in enumerate(ulbor):
+                pqbor = pq(bor)
+                ty = type(bor)
+                txt = pqbor.text()
+        return uls
+
                 
 
 if __name__=="__main__":

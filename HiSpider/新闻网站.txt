@@ -1,4 +1,4 @@
-查找h的兄弟节点
+h兄弟节点+UL
 成功
 http://news.ifeng.com/
 
@@ -71,34 +71,33 @@ http://www.m4.cn/
 http://bbs.tianya.cn/list-free-1.shtml
 
 http://forum.home.news.cn/
-失败
 https://news.sina.com.cn/
 
 http://www.stnn.cc/
 
 http://news.sohu.com/
-
 http://www.71.cn/
 
 http://www.huanqiu.com/?agt=6956
 
+
 http://www.chinadaily.com.cn/
+
 
 http://www.xfrb.com.cn/
 
 http://www.oeeee.com/
 
 
-无法解析html编码
+http://www.cankaoxiaoxi.com/
+
+有问题
+
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 131: character maps to <undefined>
 http://www.chinanews.com/
 
 403
 http://www.xinhuanet.com/
-
-
-有问题
-http://www.cankaoxiaoxi.com/
-
 
 数据不干净
 http://www.takungpao.com/
@@ -111,13 +110,10 @@ http://club.kdnet.net/list.asp?boardid=1
 http://www.aisixiang.com/
 AJAX
 http://www.infzm.com/
-
 http 521
 http://www.sxrb.com/
 TypeError: decode() argument 1 must be str, not None
 http://www.haiwainet.cn/
-
-
 https://edition.cnn.com/
 
 

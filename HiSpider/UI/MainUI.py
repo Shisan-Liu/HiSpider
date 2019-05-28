@@ -1,35 +1,31 @@
-#conding=utf-8
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
-from UI.ListView import ListView
-from UI.DiclistModule import DiclistWidget
+from UI.lstView_history import ListView
+from UI.diclist_model import DiclistWidget
+from Model.model import Model
+
 import json
-#from Static.main import HiSpider  as HS
 import sys
 
 class UserInterface(QWidget):
     def __init__(self,HiSpidier):
         super().__init__()
-
         self.HiSpider = HiSpidier
-        self.currentFormat = ".json"
-
         self.initUI()
         self.show()
 
     def initUI(self):
-
         self.setGeometry(0, 0, 1280, 720)
         self.setWindowTitle('HiSpider')
-
         # 水平主布局
         self.MainBox = QHBoxLayout()
         self.setLayout(self.MainBox)
+        self.Left()
+        self.Right()
 
+    def Left(self):
         # 左侧纵向布局LeftBox
-        #######################################################################
         self.LeftWidget = QWidget()
         self.LeftWidget.setFixedWidth(300)
         self.LeftWidget.setGeometry(0, 0, 400, 720)
@@ -68,7 +64,7 @@ class UserInterface(QWidget):
         self.exportBurrom = QPushButton("导出")
         self.exportBurrom.clicked.connect(self.Export)
         # 保存格式
-
+        self.currentFormat = ".json"
         self.SaveFormat = QToolButton(self)
         #self.SaveFormat.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         #self.SaveFormat.setArrowType(Qt.DownArrow)             # 设置箭头方向
@@ -101,8 +97,9 @@ class UserInterface(QWidget):
 
         self.LeftBox.addWidget(self.pListView)
 
+
+    def Right(self):
         # 右侧纵向布局RightBox
-        #######################################################################
         self.RightBox = QVBoxLayout()
         self.MainBox.addLayout(self.RightBox)
 
@@ -126,6 +123,7 @@ class UserInterface(QWidget):
         self.DiclistVBox = QVBoxLayout()
         self.DiclistTab.setLayout(self.DiclistVBox)
         self.tabWidget.addTab(self.DiclistTab, "  Diclist  ")
+        self.widgetlist_dic = []    #diclist显示控件列表
 
         # 滚动条
         self.ScroWidget = QWidget()
@@ -182,51 +180,62 @@ class UserInterface(QWidget):
 
 
         #self.setLayout(self.grid)
-        self.widgetlist = []    #diclist显示控件列表
+
         
-
-
     def SubmitRequest(self):
         # 提交URL获取HTML
         url = self.URLInput.text()
         modulename = self.ModelNameInput.text()
         self.HiSpider.SendRequest(url,modulename)
 
+    def SaveDiclistEdit(self):
+        # 更新UI界面中的设置到模型配置文件
+
+        diclist = self.CurrentModule.Get("diclist")
+        for w in self.widgetlist_dic:
+            index = w.index
+            isselect = w.GetIsSelect()
+            title = w.GetTitle()
+
+            diclist[index]["title"] = title
+            diclist[index]["select"] = isselect
+        self.CurrentModule.Conf_update()
 
     def Export(self):
         # 导出
-        print(self.currentFormat)
+
+        self.SaveDiclistEdit()
         filename = self.ExportInput.text() + self.currentFormat
-        
-        diclist = []
-        for w in self.widgetlist:
-            if(w.isSelect):
-                dic = {}
-                dic["title"] = w.key
-                dic["content"] = str(w.vallist)
-                diclist.append(dic)
+        self.CurrentModule.OutPut(filename)
 
-        diclistpath = self.CurrentModule.GetValue("ModuleHome")+'/'+filename
-        self.HiSpider.FC.DicList_write(diclistpath,diclist)
+    def AddModelHistory(self,SimpleModel):
+        #  list增加模型历史
+        self.pListView.addItem(SimpleModel)
 
-
-    def ShowModule(self,Module):
+    def ShowModule(self,tModel):
+        self.CurrentModule = tModel
+        if(isinstance(tModel, Model)==False):
+            self.CurrentModule = Model(tModel)
+        else:
+            self.CurrentModule = tModel
         # 显示HTML和Diclist
-        self.CurrentModule = Module         # 此处才声明的当前模型变量，所以在打开之前不能调用导出函数
-        html = self.CurrentModule.GetValue("html")
+
+        html = self.CurrentModule.Get("html")
         
         self.Content1.setPlainText(html)# setPlainText纯文本，settext富文本
         # 清空显示diclist的控件
-        if(len(self.widgetlist)!=0):
-            for i,w in enumerate(self.widgetlist):
+        if(len(self.widgetlist_dic)!=0):
+            for i,w in enumerate(self.widgetlist_dic):
                 w.deleteLater()
-                del self.widgetlist[i]
+                del self.widgetlist_dic[i]
 
-        diclist = self.CurrentModule.GetValue("diclist")
-        for i in diclist:
-            dw = DiclistWidget(i)
-            self.widgetlist.append(dw)
-            self.ScroWidgetVBox.addWidget(dw)
+        diclist = self.CurrentModule.Get("diclist")
+        print(diclist)
+        if(diclist!=[]):
+            for i,dic in enumerate(diclist):
+                dw = DiclistWidget(dic,i)
+                self.widgetlist_dic.append(dw)
+                self.ScroWidgetVBox.addWidget(dw)
 
 
     def SetFormat(self):

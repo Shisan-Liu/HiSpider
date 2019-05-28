@@ -21,33 +21,49 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Function.py">
+    <Compile Include="Model\model.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\model_s.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Root\basefile.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Root\filecontroller.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\client.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\service.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Static\urlrequest.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\DiclistModule.py">
+    <Compile Include="UI\diclist_model.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\ListView.py" />
+    <Compile Include="UI\lstView_history.py" />
     <Compile Include="UI\MainUI.py" />
     <Compile Include="Analyze\Analyze.py" />
     <Compile Include="Static\classsify.py" />
     <Compile Include="Static\main.py" />
-    <Compile Include="Static\module.py">
+    <Compile Include="回收站\module.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\ModuleItem.py" />
+    <Compile Include="UI\listModel_history.py" />
     <Compile Include="Static\myRequests.py" />
-    <Compile Include="Static\filecontroller.py" />
+    <Compile Include="回收站\filecontroller.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Analyze\" />
-    <Folder Include="content\" />
     <Folder Include="Dynamic\" />
-    <Folder Include="log\" />
-    <Folder Include="Config\" />
+    <Folder Include="Model\" />
+    <Folder Include="Service\" />
+    <Folder Include="回收站\" />
+    <Folder Include="Root\" />
     <Folder Include="UI\" />
     <Folder Include="Static\" />
     <Folder Include="Verify\" />
